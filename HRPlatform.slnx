@@ -1,0 +1,9 @@
+<Solution>
+  <Project Path="ApiGateway/ApiGateway.csproj" />
+  <Project Path="AuthService/AuthService.csproj" />
+  <Project Path="DashboardService/DashboardService.csproj" />
+  <Project Path="EmployeeService/EmployeeService.csproj" />
+  <Project Path="LeaveService/LeaveService.csproj" />
+  <Project Path="NotificationService/NotificationService.csproj" />
+  <Project Path="PayrollService/PayrollService.csproj" />
+</Solution>

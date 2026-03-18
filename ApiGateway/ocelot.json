@@ -1,0 +1,133 @@
+{
+  "Routes": [
+    {
+      "DownstreamPathTemplate": "/api/auth/login",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [{ "Host": "127.0.0.1", "Port": 5001 }],
+      "UpstreamPathTemplate": "/api/auth/login",
+      "UpstreamHttpMethod": [ "POST" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/employee",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [{ "Host": "127.0.0.1", "Port": 5002 }],
+      "UpstreamPathTemplate": "/api/employee",
+      "UpstreamHttpMethod": [ "GET", "POST" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/employee/{id}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [{ "Host": "127.0.0.1", "Port": 5002 }],
+      "UpstreamPathTemplate": "/api/employee/{id}",
+      "UpstreamHttpMethod": [ "GET", "PUT", "DELETE" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/leave",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [{ "Host": "127.0.0.1", "Port": 5003 }],
+      "UpstreamPathTemplate": "/api/leave",
+      "UpstreamHttpMethod": [ "GET", "POST" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/leave/{id}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [{ "Host": "127.0.0.1", "Port": 5003 }],
+      "UpstreamPathTemplate": "/api/leave/{id}",
+      "UpstreamHttpMethod": [ "GET", "DELETE" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/leave/{id}/status",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [{ "Host": "127.0.0.1", "Port": 5003 }],
+      "UpstreamPathTemplate": "/api/leave/{id}/status",
+      "UpstreamHttpMethod": [ "PUT" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/leave/employee/{employeeId}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [{ "Host": "127.0.0.1", "Port": 5003 }],
+      "UpstreamPathTemplate": "/api/leave/employee/{employeeId}",
+      "UpstreamHttpMethod": [ "GET" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/payroll",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [{ "Host": "127.0.0.1", "Port": 5004 }],
+      "UpstreamPathTemplate": "/api/payroll",
+      "UpstreamHttpMethod": [ "GET", "POST" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/payroll/{id}/pay",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [{ "Host": "127.0.0.1", "Port": 5004 }],
+      "UpstreamPathTemplate": "/api/payroll/{id}/pay",
+      "UpstreamHttpMethod": [ "PUT" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/payroll/employee/{employeeId}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [{ "Host": "127.0.0.1", "Port": 5004 }],
+      "UpstreamPathTemplate": "/api/payroll/employee/{employeeId}",
+      "UpstreamHttpMethod": [ "GET" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/payroll/summary/{year}/{month}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [{ "Host": "127.0.0.1", "Port": 5004 }],
+      "UpstreamPathTemplate": "/api/payroll/summary/{year}/{month}",
+      "UpstreamHttpMethod": [ "GET" ]
+    },
+    {
+  "DownstreamPathTemplate": "/api/dashboard/summary",
+  "DownstreamScheme": "http",
+  "DownstreamHostAndPorts": [{ "Host": "127.0.0.1", "Port": 5005 }],
+  "UpstreamPathTemplate": "/api/dashboard/summary",
+  "UpstreamHttpMethod": [ "GET" ]
+},
+{
+  "DownstreamPathTemplate": "/api/dashboard/employees/departments",
+  "DownstreamScheme": "http",
+  "DownstreamHostAndPorts": [{ "Host": "127.0.0.1", "Port": 5005 }],
+  "UpstreamPathTemplate": "/api/dashboard/employees/departments",
+  "UpstreamHttpMethod": [ "GET" ]
+},
+{
+  "DownstreamPathTemplate": "/api/notification",
+  "DownstreamScheme": "http",
+  "DownstreamHostAndPorts": [{ "Host": "127.0.0.1", "Port": 5006 }],
+  "UpstreamPathTemplate": "/api/notification",
+  "UpstreamHttpMethod": [ "GET", "POST" ]
+},
+{
+  "DownstreamPathTemplate": "/api/notification/unread",
+  "DownstreamScheme": "http",
+  "DownstreamHostAndPorts": [{ "Host": "127.0.0.1", "Port": 5006 }],
+  "UpstreamPathTemplate": "/api/notification/unread",
+  "UpstreamHttpMethod": [ "GET" ]
+},
+{
+  "DownstreamPathTemplate": "/api/notification/{id}/read",
+  "DownstreamScheme": "http",
+  "DownstreamHostAndPorts": [{ "Host": "127.0.0.1", "Port": 5006 }],
+  "UpstreamPathTemplate": "/api/notification/{id}/read",
+  "UpstreamHttpMethod": [ "PUT" ]
+},
+{
+  "DownstreamPathTemplate": "/api/notification/read-all",
+  "DownstreamScheme": "http",
+  "DownstreamHostAndPorts": [{ "Host": "127.0.0.1", "Port": 5006 }],
+  "UpstreamPathTemplate": "/api/notification/read-all",
+  "UpstreamHttpMethod": [ "PUT" ]
+},
+{
+  "DownstreamPathTemplate": "/api/notification/{id}",
+  "DownstreamScheme": "http",
+  "DownstreamHostAndPorts": [{ "Host": "127.0.0.1", "Port": 5006 }],
+  "UpstreamPathTemplate": "/api/notification/{id}",
+  "UpstreamHttpMethod": [ "DELETE" ]
+}
+  ],
+  "GlobalConfiguration": {
+    "BaseUrl": "http://localhost:5000"
+  }
+}
