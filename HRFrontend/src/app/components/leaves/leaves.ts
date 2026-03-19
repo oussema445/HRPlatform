@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
@@ -34,7 +34,9 @@ export class LeavesComponent implements OnInit {
     private leaveService: LeaveService,
     private authService: AuthService,
     private notificationService: NotificationService,
-    private router: Router
+    private router: Router,
+    private cdr: ChangeDetectorRef
+
   ) {}
 
   ngOnInit() {
@@ -56,12 +58,15 @@ export class LeavesComponent implements OnInit {
         if (this.role === 'Employee') {
           const employeeId = localStorage.getItem('employeeId');
           this.leaves = data.filter((l: any) => l.employeeId == employeeId);
+          this.leaves = [...data];
+  this.cdr.detectChanges();
         } else {
           this.leaves = data;
         }
       },
       error: () => this.router.navigate(['/login'])
     });
+
   }
 
   loadEmployeeNotifications(employeeId: number) {
@@ -101,4 +106,5 @@ export class LeavesComponent implements OnInit {
     this.authService.logout();
     this.router.navigate(['/login']);
   }
+  
 }

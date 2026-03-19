@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
@@ -33,7 +33,8 @@ export class EmployeesComponent implements OnInit {
   constructor(
     private employeeService: EmployeeService,
     private authService: AuthService,
-    private router: Router
+    private router: Router,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit() {
@@ -43,7 +44,10 @@ export class EmployeesComponent implements OnInit {
 
   loadEmployees() {
     this.employeeService.getAll().subscribe({
-      next: (data) => this.employees = data,
+      next: (data) => {
+        this.employees = [...data]; // ← spread pour forcer la détection
+        this.cdr.detectChanges(); // ← force la mise à jour
+      },
       error: () => this.router.navigate(['/login'])
     });
   }

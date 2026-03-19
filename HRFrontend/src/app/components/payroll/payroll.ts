@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
@@ -35,7 +35,9 @@ export class PayrollComponent implements OnInit {
   constructor(
     private authService: AuthService,
     private router: Router,
-    private http: HttpClient
+    private http: HttpClient,
+    private cdr: ChangeDetectorRef
+
   ) {}
 
   private headers() {
@@ -50,24 +52,33 @@ export class PayrollComponent implements OnInit {
     this.loadSummary();
   }
 
-  loadPayrolls() {
-    this.http.get<any[]>(`${environment.apiUrl}/api/payroll`, {
-      headers: this.headers()
-    }).subscribe({
-      next: (data) => this.payrolls = data,
-      error: () => this.router.navigate(['/login'])
-    });
-  }
 
-  loadSummary() {
-    const month = new Date().getMonth() + 1;
-    const year = new Date().getFullYear();
-    this.http.get<any>(`${environment.apiUrl}/api/payroll/summary/${year}/${month}`, {
-      headers: this.headers()
-    }).subscribe({
-      next: (data) => this.summary = data
-    });
-  }
+// Modifie loadPayrolls
+loadPayrolls() {
+  this.http.get<any[]>(`${environment.apiUrl}/api/payroll`, {
+    headers: this.headers()
+  }).subscribe({
+    next: (data) => {
+      this.payrolls = [...data];
+      this.cdr.detectChanges();
+    },
+    error: () => this.router.navigate(['/login'])
+  });
+}
+
+// Modifie loadSummary
+loadSummary() {
+  const month = new Date().getMonth() + 1;
+  const year = new Date().getFullYear();
+  this.http.get<any>(`${environment.apiUrl}/api/payroll/summary/${year}/${month}`, {
+    headers: this.headers()
+  }).subscribe({
+    next: (data) => {
+      this.summary = {...data};
+      this.cdr.detectChanges();
+    }
+  });
+}
 
   createPayroll() {
     this.http.post<any>(`${environment.apiUrl}/api/payroll`, this.newPayroll, {

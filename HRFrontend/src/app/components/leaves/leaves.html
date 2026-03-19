@@ -11,7 +11,9 @@
         <a routerLink="/payroll">Paie</a>
         <a routerLink="/notifications">🔔</a>
       }
-      <a routerLink="/profile">👤 Profil</a>
+      @if (role === 'Employee') {
+        <a routerLink="/profile">👤 Profil</a>
+      }
     </div>
     <div class="navbar-user">
       <span>👤 {{ role }}</span>
