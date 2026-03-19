@@ -1,0 +1,124 @@
+<div class="page-container">
+  <!-- Navbar -->
+  <nav class="navbar">
+    <div class="navbar-brand">🏢 HR Platform</div>
+    <div class="navbar-menu">
+      <a routerLink="/dashboard">Dashboard</a>
+      <a routerLink="/employees" class="active">Employés</a>
+      <a routerLink="/leaves">Congés</a>
+      <a routerLink="/payroll">Paie</a>
+      <a routerLink="/notifications">🔔</a>
+    </div>
+    <button (click)="logout()" class="logout-btn">Déconnexion</button>
+  </nav>
+
+  <div class="content">
+    <div class="page-header">
+      <h2>👥 Gestion des Employés</h2>
+      @if (role === 'Admin' || role === 'HR') {
+        <button (click)="openForm()" class="btn-primary">+ Ajouter Employé</button>
+      }
+    </div>
+
+    <!-- Formulaire -->
+    @if (showForm) {
+      <div class="modal-overlay">
+        <div class="modal">
+          <h3>{{ isEdit ? 'Modifier' : 'Ajouter' }} un Employé</h3>
+
+          <div class="form-grid">
+            <div class="form-group">
+              <label>Nom complet</label>
+              <input [(ngModel)]="newEmployee.fullName" type="text" class="form-control" />
+            </div>
+            <div class="form-group">
+              <label>Email</label>
+              <input [(ngModel)]="newEmployee.email" type="email" class="form-control" />
+            </div>
+            <div class="form-group">
+              <label>Téléphone</label>
+              <input [(ngModel)]="newEmployee.phone" type="text" class="form-control" />
+            </div>
+            <div class="form-group">
+              <label>Poste</label>
+              <input [(ngModel)]="newEmployee.position" type="text" class="form-control" />
+            </div>
+            <div class="form-group">
+              <label>Département</label>
+              <select [(ngModel)]="newEmployee.department" class="form-control">
+                <option>IT</option>
+                <option>HR</option>
+                <option>Finance</option>
+                <option>Operations</option>
+                <option>Marketing</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Date d'embauche</label>
+              <input [(ngModel)]="newEmployee.hireDate" type="date" class="form-control" />
+            </div>
+            <div class="form-group">
+              <label>Salaire (SAR)</label>
+              <input [(ngModel)]="newEmployee.salary" type="number" class="form-control" />
+            </div>
+            <div class="form-group">
+              <label>Statut</label>
+              <select [(ngModel)]="newEmployee.status" class="form-control">
+                <option>Active</option>
+                <option>Inactive</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="modal-actions">
+            <button (click)="showForm = false" class="btn-cancel">Annuler</button>
+            <button (click)="saveEmployee()" class="btn-primary">Enregistrer</button>
+          </div>
+        </div>
+      </div>
+    }
+
+    <!-- Table -->
+    <div class="table-container">
+      <table>
+        <thead>
+          <tr>
+            <th>Nom</th>
+            <th>Email</th>
+            <th>Poste</th>
+            <th>Département</th>
+            <th>Salaire</th>
+            <th>Statut</th>
+            @if (role === 'Admin' || role === 'HR') {
+              <th>Actions</th>
+            }
+          </tr>
+        </thead>
+        <tbody>
+          @for (emp of employees; track emp.id) {
+            <tr>
+              <td>{{ emp.fullName }}</td>
+              <td>{{ emp.email }}</td>
+              <td>{{ emp.position }}</td>
+              <td>{{ emp.department }}</td>
+              <td>{{ emp.salary | number }} SAR</td>
+              <td>
+                <span [class]="emp.status === 'Active' ? 'badge-active' : 'badge-inactive'">
+                  {{ emp.status }}
+                </span>
+              </td>
+              @if (role === 'Admin' || role === 'HR') {
+                <td>
+                  <button (click)="editEmployee(emp)" class="btn-edit">✏️</button>
+                  @if (role === 'Admin') {
+                    <button (click)="deleteEmployee(emp.id)" class="btn-delete">🗑️</button>
+                  }
+                </td>
+              }
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

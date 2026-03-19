@@ -1,0 +1,58 @@
+<div class="page-container">
+  <nav class="navbar">
+    <div class="navbar-brand">🏢 HR Platform</div>
+    <div class="navbar-menu">
+      <a routerLink="/dashboard">Dashboard</a>
+      <a routerLink="/employees">Employés</a>
+      <a routerLink="/leaves">Congés</a>
+      <a routerLink="/payroll">Paie</a>
+      <a routerLink="/notifications" class="active">
+        🔔 Notifications
+        @if (unreadCount > 0) {
+          <span class="badge">{{ unreadCount }}</span>
+        }
+      </a>
+    </div>
+    <button (click)="logout()" class="logout-btn">Déconnexion</button>
+  </nav>
+
+  <div class="content">
+    <div class="page-header">
+      <h2>🔔 Notifications</h2>
+      @if (unreadCount > 0) {
+        <button (click)="markAllAsRead()" class="btn-primary">
+          Tout marquer comme lu ({{ unreadCount }})
+        </button>
+      }
+    </div>
+
+    <div class="notifications-list">
+      @if (notifications.length === 0) {
+        <div class="empty-state">
+          <p>🎉 Aucune notification !</p>
+        </div>
+      }
+
+      @for (n of notifications; track n.id) {
+        <div [class]="n.isRead ? 'notification-item read' : 'notification-item unread'">
+          <div class="notification-content">
+            <div class="notification-icon">
+              {{ n.type === 'NewEmployee' ? '👤' :
+                 n.type === 'NewLeave' ? '🏖️' :
+                 n.type === 'StatusChange' ? '🔄' :
+                 n.type === 'LeaveStatusUpdate' ? '✅' : '🔔' }}
+            </div>
+            <div class="notification-body">
+              <strong>{{ n.title }}</strong>
+              <p>{{ n.message }}</p>
+              <small>{{ n.createdAt | date:'dd/MM/yyyy HH:mm' }}</small>
+            </div>
+          </div>
+          @if (!n.isRead) {
+            <button (click)="markAsRead(n.id)" class="btn-read">✓ Lu</button>
+          }
+        </div>
+      }
+    </div>
+  </div>
+</div>

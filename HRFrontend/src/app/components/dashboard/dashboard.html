@@ -1,0 +1,77 @@
+<div class="dashboard-container">
+  <!-- Navbar -->
+  <nav class="navbar">
+    <div class="navbar-brand">🏢 HR Platform</div>
+    <div class="navbar-menu">
+      <a routerLink="/dashboard">Dashboard</a>
+      <a routerLink="/employees">Employés</a>
+      <a routerLink="/leaves">Congés</a>
+      <a routerLink="/payroll">Paie</a>
+      <a routerLink="/notifications">
+        🔔 Notifications
+        @if (unreadCount > 0) {
+          <span class="badge">{{ unreadCount }}</span>
+        }
+      </a>
+    </div>
+    <div class="navbar-user">
+      <span>👤 {{ fullName }} ({{ role }})</span>
+      <button (click)="logout()">Déconnexion</button>
+    </div>
+  </nav>
+
+  <!-- Content -->
+  <div class="content">
+    <h2>📊 Dashboard RH</h2>
+
+    <!-- Stats Cards -->
+    <div class="stats-grid">
+      <div class="stat-card blue">
+        <div class="stat-icon">👥</div>
+        <div class="stat-info">
+          <h3>{{ summary.totalEmployees || 0 }}</h3>
+          <p>Total Employés</p>
+        </div>
+      </div>
+
+      <div class="stat-card green">
+        <div class="stat-icon">✅</div>
+        <div class="stat-info">
+          <h3>{{ summary.activeEmployees || 0 }}</h3>
+          <p>Employés Actifs</p>
+        </div>
+      </div>
+
+      <div class="stat-card orange">
+        <div class="stat-icon">⏳</div>
+        <div class="stat-info">
+          <h3>{{ summary.pendingLeaves || 0 }}</h3>
+          <p>Congés en attente</p>
+        </div>
+      </div>
+
+      <div class="stat-card purple">
+        <div class="stat-icon">🔔</div>
+        <div class="stat-info">
+          <h3>{{ unreadCount }}</h3>
+          <p>Notifications</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Notifications récentes -->
+    <div class="recent-notifications">
+      <h3>🔔 Notifications récentes</h3>
+      @if (notifications.length === 0) {
+        <p class="empty">Aucune notification</p>
+      }
+      @for (n of notifications; track n.id) {
+        <div class="notification-item">
+          <strong>{{ n.title }}</strong>
+          <p>{{ n.message }}</p>
+          <small>{{ n.createdAt | date:'dd/MM/yyyy HH:mm' }}</small>
+        </div>
+      }
+    </div>
+  </div>
+</div>

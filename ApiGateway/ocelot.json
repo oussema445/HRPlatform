@@ -125,6 +125,27 @@
   "DownstreamHostAndPorts": [{ "Host": "127.0.0.1", "Port": 5006 }],
   "UpstreamPathTemplate": "/api/notification/{id}",
   "UpstreamHttpMethod": [ "DELETE" ]
+},
+{
+  "DownstreamPathTemplate": "/api/auth/register",
+  "DownstreamScheme": "http",
+  "DownstreamHostAndPorts": [{ "Host": "127.0.0.1", "Port": 5001 }],
+  "UpstreamPathTemplate": "/api/auth/register",
+  "UpstreamHttpMethod": [ "POST" ]
+},
+{
+  "DownstreamPathTemplate": "/api/auth/change-password",
+  "DownstreamScheme": "http",
+  "DownstreamHostAndPorts": [{ "Host": "127.0.0.1", "Port": 5001 }],
+  "UpstreamPathTemplate": "/api/auth/change-password",
+  "UpstreamHttpMethod": [ "PUT" ]
+},
+{
+  "DownstreamPathTemplate": "/api/notification/employee/{employeeId}",
+  "DownstreamScheme": "http",
+  "DownstreamHostAndPorts": [{ "Host": "127.0.0.1", "Port": 5006 }],
+  "UpstreamPathTemplate": "/api/notification/employee/{employeeId}",
+  "UpstreamHttpMethod": [ "GET" ]
 }
   ],
   "GlobalConfiguration": {

@@ -1,0 +1,135 @@
+<div class="page-container">
+  <nav class="navbar">
+    <div class="navbar-brand">🏢 HR Platform</div>
+    <div class="navbar-menu">
+      <a routerLink="/dashboard">Dashboard</a>
+      <a routerLink="/employees">Employés</a>
+      <a routerLink="/leaves">Congés</a>
+      <a routerLink="/payroll" class="active">Paie</a>
+      <a routerLink="/notifications">🔔</a>
+    </div>
+    <button (click)="logout()" class="logout-btn">Déconnexion</button>
+  </nav>
+
+  <div class="content">
+    <div class="page-header">
+      <h2>💰 Gestion de la Paie</h2>
+      @if (role === 'Admin' || role === 'HR') {
+        <button (click)="showForm = true" class="btn-primary">+ Nouvelle Fiche</button>
+      }
+    </div>
+
+    <!-- Summary Cards -->
+    <div class="summary-grid">
+      <div class="summary-card">
+        <h3>{{ summary.totalEmployees || 0 }}</h3>
+        <p>Total Employés</p>
+      </div>
+      <div class="summary-card green">
+        <h3>{{ summary.totalNetSalary || 0 | number }} SAR</h3>
+        <p>Total Salaires</p>
+      </div>
+      <div class="summary-card blue">
+        <h3>{{ summary.totalPaid || 0 }}</h3>
+        <p>Payés</p>
+      </div>
+      <div class="summary-card orange">
+        <h3>{{ summary.totalPending || 0 }}</h3>
+        <p>En attente</p>
+      </div>
+    </div>
+
+    @if (showForm) {
+      <div class="modal-overlay">
+        <div class="modal">
+          <h3>Nouvelle Fiche de Paie</h3>
+          <div class="form-grid">
+            <div class="form-group">
+              <label>ID Employé</label>
+              <input [(ngModel)]="newPayroll.employeeId" type="number" class="form-control" />
+            </div>
+            <div class="form-group">
+              <label>Nom Employé</label>
+              <input [(ngModel)]="newPayroll.employeeName" type="text" class="form-control" />
+            </div>
+            <div class="form-group">
+              <label>Mois</label>
+              <input [(ngModel)]="newPayroll.month" type="number" class="form-control" />
+            </div>
+            <div class="form-group">
+              <label>Année</label>
+              <input [(ngModel)]="newPayroll.year" type="number" class="form-control" />
+            </div>
+            <div class="form-group">
+              <label>Salaire de base (SAR)</label>
+              <input [(ngModel)]="newPayroll.basicSalary" type="number" class="form-control" />
+            </div>
+            <div class="form-group">
+              <label>Indemnité logement</label>
+              <input [(ngModel)]="newPayroll.housingAllowance" type="number" class="form-control" />
+            </div>
+            <div class="form-group">
+              <label>Indemnité transport</label>
+              <input [(ngModel)]="newPayroll.transportAllowance" type="number" class="form-control" />
+            </div>
+            <div class="form-group">
+              <label>Prime</label>
+              <input [(ngModel)]="newPayroll.bonus" type="number" class="form-control" />
+            </div>
+            <div class="form-group">
+              <label>Déductions</label>
+              <input [(ngModel)]="newPayroll.deductions" type="number" class="form-control" />
+            </div>
+          </div>
+          <div class="modal-actions">
+            <button (click)="showForm = false" class="btn-cancel">Annuler</button>
+            <button (click)="createPayroll()" class="btn-primary">Enregistrer</button>
+          </div>
+        </div>
+      </div>
+    }
+
+    <div class="table-container">
+      <table>
+        <thead>
+          <tr>
+            <th>Employé</th>
+            <th>Mois/Année</th>
+            <th>Salaire Base</th>
+            <th>Primes</th>
+            <th>Déductions</th>
+            <th>Net SAR</th>
+            <th>Statut</th>
+            @if (role === 'Admin' || role === 'HR') {
+              <th>Actions</th>
+            }
+          </tr>
+        </thead>
+        <tbody>
+          @for (p of payrolls; track p.id) {
+            <tr>
+              <td>{{ p.employeeName }}</td>
+              <td>{{ p.month }}/{{ p.year }}</td>
+              <td>{{ p.basicSalary | number }} SAR</td>
+              <td>{{ p.bonus | number }} SAR</td>
+              <td>{{ p.deductions | number }} SAR</td>
+              <td><strong>{{ p.netSalary | number }} SAR</strong></td>
+              <td>
+                <span [class]="p.status === 'Paid' ? 'badge-paid' : 'badge-pending'">
+                  {{ p.status }}
+                </span>
+              </td>
+              @if (role === 'Admin' || role === 'HR') {
+                <td>
+                  @if (p.status === 'Pending') {
+                    <button (click)="markAsPaid(p.id)" class="btn-pay">💳 Payer</button>
+                  }
+                </td>
+              }
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

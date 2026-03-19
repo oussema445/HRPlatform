@@ -58,22 +58,6 @@ public class EmployeeController : ControllerBase
         return Ok(employee);
     }
 
-    [HttpPost]
-    [Authorize(Roles = "Admin,HR")]
-    public async Task<IActionResult> Create([FromBody] Employee employee)
-    {
-        _context.Employees.Add(employee);
-        await _context.SaveChangesAsync();
-
-        // 🔔 Notification automatique
-        await SendNotification(
-            "Nouvel Employé",
-            $"L'employé {employee.FullName} a été ajouté au département {employee.Department}",
-            "NewEmployee"
-        );
-
-        return CreatedAtAction(nameof(GetById), new { id = employee.Id }, employee);
-    }
 
     [HttpPut("{id}")]
     [Authorize(Roles = "Admin,HR")]
@@ -123,4 +107,56 @@ public class EmployeeController : ControllerBase
 
         return Ok($"Employé {employee.FullName} supprimé !");
     }
+    [HttpPost]
+[Authorize(Roles = "Admin,HR")]
+public async Task<IActionResult> Create([FromBody] Employee employee)
+{
+    _context.Employees.Add(employee);
+    await _context.SaveChangesAsync();
+
+    // 🔔 Notification
+    await SendNotification(
+        "Nouvel Employé",
+        $"L'employé {employee.FullName} a été ajouté au département {employee.Department}",
+        "NewEmployee"
+    );
+
+    // 👤 Crée automatiquement un compte
+    await CreateUserAccount(employee);
+
+    return CreatedAtAction(nameof(GetById), new { id = employee.Id }, employee);
+}
+
+private async Task CreateUserAccount(Employee employee)
+{
+    try {
+        var client = _httpClientFactory.CreateClient();
+        var token = Request.Headers["Authorization"].ToString();
+        if (!string.IsNullOrEmpty(token))
+            client.DefaultRequestHeaders.Add("Authorization", token);
+
+        // Username = prénom.nom en minuscules
+        var nameParts = employee.FullName.ToLower().Split(' ');
+        var username = nameParts.Length >= 2
+            ? $"{nameParts[0]}.{nameParts[1]}"
+            : nameParts[0];
+
+        var registerRequest = new {
+            username,
+            password = "12345", // mot de passe par défaut
+            role = "Employee",
+            fullName = employee.FullName,
+            email = employee.Email,
+            employeeId = employee.Id
+        };
+
+        var json = JsonSerializer.Serialize(registerRequest);
+        var content = new StringContent(json, Encoding.UTF8, "application/json");
+        await client.PostAsync(
+            $"{_config["Services:AuthService"]}/api/auth/register",
+            content
+        );
+    }
+    catch { }
+}
 }

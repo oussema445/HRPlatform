@@ -6,4 +6,6 @@ public class User
     public required string Role { get; set; } 
     public required string FullName { get; set; }
     public required string Email { get; set; }
+        public int? EmployeeId { get; set; } // ← nouveau
+
 }

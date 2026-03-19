@@ -14,7 +14,7 @@ public class NotificationController : ControllerBase
         _context = context;
     }
 
-    // GET — toutes les notifications pour Admin/HR
+    // GET — toutes les notifications
     [HttpGet]
     [Authorize(Roles = "Admin,HR")]
     public async Task<IActionResult> GetAll()
@@ -36,6 +36,20 @@ public class NotificationController : ControllerBase
             .ToListAsync();
         return Ok(new {
             Count = notifications.Count,
+            Notifications = notifications
+        });
+    }
+
+    // GET — notifications par employé
+    [HttpGet("employee/{employeeId}")]
+    public async Task<IActionResult> GetByEmployee(int employeeId)
+    {
+        var notifications = await _context.Notifications
+            .Where(n => n.EmployeeId == employeeId)
+            .OrderByDescending(n => n.CreatedAt)
+            .ToListAsync();
+        return Ok(new {
+            Count = notifications.Count(n => !n.IsRead),
             Notifications = notifications
         });
     }

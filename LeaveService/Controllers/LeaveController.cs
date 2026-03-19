@@ -20,7 +20,7 @@ public class LeaveController : ControllerBase
         _config = config;
     }
 
-    private async Task SendNotification(string title, string message, string type)
+    private async Task SendNotification(string title, string message, string type, string targetRole, int? employeeId = null)
     {
         try {
             var client = _httpClientFactory.CreateClient();
@@ -32,7 +32,8 @@ public class LeaveController : ControllerBase
                 title,
                 message,
                 type,
-                targetRole = "Admin,HR",
+                targetRole,
+                employeeId,
                 isRead = false
             };
 
@@ -67,11 +68,12 @@ public class LeaveController : ControllerBase
         _context.Leaves.Add(leave);
         await _context.SaveChangesAsync();
 
-        // 🔔 Notification
+        // 🔔 Notification pour HR/Admin
         await SendNotification(
             "Nouvelle Demande de Congé",
             $"{leave.EmployeeName} a demandé un congé {leave.Type} du {leave.StartDate:dd/MM/yyyy} au {leave.EndDate:dd/MM/yyyy}",
-            "NewLeave"
+            "NewLeave",
+            "Admin,HR"
         );
 
         return CreatedAtAction(nameof(GetAll), new { id = leave.Id }, leave);
@@ -87,11 +89,21 @@ public class LeaveController : ControllerBase
         leave.Status = request.Status;
         await _context.SaveChangesAsync();
 
-        // 🔔 Notification
+        // 🔔 Notification pour HR/Admin
         await SendNotification(
             $"Congé {request.Status}",
             $"Le congé de {leave.EmployeeName} a été {request.Status}",
-            "LeaveStatusUpdate"
+            "LeaveStatusUpdate",
+            "Admin,HR"
+        );
+
+        // 🔔 Notification pour l'employé
+        await SendNotification(
+            $"Votre congé a été {request.Status}",
+            $"Votre demande de congé {leave.Type} du {leave.StartDate:dd/MM/yyyy} au {leave.EndDate:dd/MM/yyyy} a été {request.Status}",
+            "LeaveStatusUpdate",
+            "Employee",
+            leave.EmployeeId
         );
 
         return Ok(leave);
